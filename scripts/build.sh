@@ -15,9 +15,8 @@ else
   exit 1
 fi
 
-tar -xzf $TGZ
-cd ${TGZ%.*.*} && ./configure \
-  --prefix=$(pwd |sed 's@/[^/]*$@@')/prosody \
+tar -xzf $TGZ && cd ${TGZ%.*.*} && ./configure \
+  --prefix=$(pwd |sed 's@/ext\/.*$@@')/prosody \
   --runwith=$(which lua5.1) \
   --with-lua-include=/usr/include/lua5.1
 
