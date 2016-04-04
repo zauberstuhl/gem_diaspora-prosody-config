@@ -5,8 +5,7 @@ Gem::Specification.new do |s|
   s.description = 'A prosody config-wrapper for Diaspora'
   s.authors     = ['Lukas Matt']
   s.email       = 'lukas@zauberstuhl.de'
-  s.require_paths = ['lib']
-  s.homepage    =
-    'https://github.com/zauberstuhl/gem_prosody'
+  s.files       = ['lib/dpc.rb']
+  s.homepage    = 'https://github.com/zauberstuhl/diaspora-prosody-config'
   s.license     = 'GPL-3.0'
 end
