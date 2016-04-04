@@ -1,3 +1,4 @@
 *.gem
 *.log
 tmp
+etc/prosody.cfg.lua
