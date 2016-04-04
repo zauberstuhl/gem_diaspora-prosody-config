@@ -144,8 +144,8 @@ authentication = "internal_plain"
 -- Logging configuration
 -- For advanced logging see http://prosody.im/doc/logging
 log = {
-	info = "#{log_info}"; -- Change 'info' to 'debug' for verbose logging
-	error = "#{log_error}";
+	info = "prosody.log"; -- Change 'info' to 'debug' for verbose logging
+	error = "prosody.err";
 	-- "*syslog"; -- Uncomment this for logging to syslog
 	-- "*console"; -- Log to the console, useful for debugging with daemonize=false
 }

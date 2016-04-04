@@ -24,8 +24,12 @@ class Prosody
   WRAPPERCFG = "#{GEMDIR}/etc/prosody.cfg.lua"
   DIASPORACFG = "#{FileUtils.pwd}/config/prosody.cfg.lua"
 
-  def self.startup
-    init_config && system("#{PROSODYBIN} --config #{WRAPPERCFG}")
+  def initialize
+    init_config
+  end
+
+  def start
+    system("#{PROSODYBIN} --config #{WRAPPERCFG}")
   end
 
   private
@@ -45,8 +49,8 @@ class Prosody
       abort("bcrypt is required for diaspora authentication")
     end
     version = Gem::Version.new(0)
-    about = %x("#{PROSODYBIN}ctl about")
-    version_string = about.match(/prosody\s(\d+\.\d+\.\d+)/i).captures
+    about = %x(#{PROSODYBIN}ctl about)
+    version_string = about.match(/prosody\s(\d+\.\d+\.\d+)/i).captures[0]
     version = Gem::Version.new(version_string)
     abort("wasn't able to detect prosody installation") if version == Gem::Version.new(0)
     abort("your're prosody version should be >= 0.9.0") if version < Gem::Version.new("0.9.0")
@@ -57,9 +61,7 @@ class Prosody
     # update prosody cfg in diaspora config dir
     gemcfg = "#{WRAPPERCFG}.tpl"
     unless File.exists?(DIASPORACFG)
-      unless FileUtils.cp(gemcfg, DIASPORACFG)
-        abort("cannot copy prosody default configuration file")
-      end
+      FileUtils.cp(gemcfg, DIASPORACFG)
     end
 
     config = File.read(DIASPORACFG)
@@ -77,8 +79,8 @@ class Prosody
 
     return {
       plugin_path: "#{GEMDIR}/modules",
-      log_info: AppConfig.chat.server.log.info.to_s,
-      log_error: AppConfig.chat.server.log.error.to_s,
+      #log_info: AppConfig.chat.server.log.info.to_s,
+      #log_error: AppConfig.chat.server.log.error.to_s,
       virtualhost_hostname: hostname,
       virtualhost_driver: db['adapter'],
       virtualhost_database: db['database'],
