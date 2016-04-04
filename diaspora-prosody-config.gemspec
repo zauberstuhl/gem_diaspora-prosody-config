@@ -1,5 +1,5 @@
 Gem::Specification.new do |s|
-  s.name        = 'prosody2gem'
+  s.name        = 'diaspora-prosody-config'
   s.version     = '0.0.1'
   s.summary     = 'A prosody config-wrapper for Diaspora'
   s.description = 'A prosody config-wrapper for Diaspora'

@@ -20,7 +20,7 @@ require "fileutils"
 
 class Prosody
   PROSODYBIN = find_binary
-  GEMDIR = Gem::Specification.find_by_name("prosody2gem").gem_dir
+  GEMDIR = Gem::Specification.find_by_name('diaspora-prosody-config').gem_dir
   WRAPPERCFG = "#{GEMDIR}/etc/prosody.cfg.lua"
   DIASPORACFG = "#{FileUtils.pwd}/config/prosody.cfg.lua"
 
