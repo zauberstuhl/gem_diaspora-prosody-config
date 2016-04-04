@@ -80,9 +80,9 @@ modules_disabled = {
 	-- "s2s"; -- Handle server-to-server connections
 };
 
--- NOTE before you modify the plugin path make sure you copied
--- every diaspora module from the old path to your new one
-plugin_paths = { "#{plugin_paths}" }
+-- NOTE if you append new plugin_paths do not remove the variable #{plugin_path}
+-- or copy all modules from the gem directory gem_diaspora-prosody-config
+plugin_paths = { "#{plugin_path}" }
 
 -- Disable account creation by default, for security
 -- For more information see http://prosody.im/doc/creating_accounts
@@ -144,8 +144,8 @@ authentication = "internal_plain"
 -- Logging configuration
 -- For advanced logging see http://prosody.im/doc/logging
 log = {
-	info = "#{log.info}"; -- Change 'info' to 'debug' for verbose logging
-	error = "#{log.error}";
+	info = "#{log_info}"; -- Change 'info' to 'debug' for verbose logging
+	error = "#{log_error}";
 	-- "*syslog"; -- Uncomment this for logging to syslog
 	-- "*console"; -- Log to the console, useful for debugging with daemonize=false
 }
@@ -154,19 +154,19 @@ log = {
 -- You need to add a VirtualHost entry for each domain you wish Prosody to serve.
 -- Settings under each VirtualHost entry apply *only* to that host.
 
-VirtualHost "#{virtualhost.hostname}"
+VirtualHost "#{virtualhost_hostname}"
   authentication = "diaspora"
   auth_diaspora = {
-    driver = "#{virtualhost.driver}",
-    database = "#{virtualhost.database}",
-    username = "#{virtualhost.username}",
-    password = "#{virtualhost.password}",
-    host = "#{virtualhost.host}"
+    driver = "#{virtualhost_driver}",
+    database = "#{virtualhost_database}",
+    username = "#{virtualhost_username}",
+    password = "#{virtualhost_password}",
+    host = "#{virtualhost_host}"
   }
 
   ssl = {
-    key = "certs/#{virtualhost.hostname}.key";
-    certificate = "certs/#{virtualhost.hostname}.crt";
+    key = "certs/#{virtualhost_hostname}.key";
+    certificate = "certs/#{virtualhost_hostname}.crt";
   }
 
   modules_enabled = {
