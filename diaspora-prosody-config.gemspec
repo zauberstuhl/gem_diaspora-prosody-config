@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'pronto'
   s.add_development_dependency 'pronto-rubocop'
-  s.add_development_dependency 'sqlite3', '~> 1.3.9'
-  s.add_development_dependency 'minitest', '~> 5.8'
-  s.add_development_dependency 'rake', '~> 10.3'
+  s.add_development_dependency 'sqlite3'
+  s.add_development_dependency 'minitest'
+  s.add_development_dependency 'rake'
 end
