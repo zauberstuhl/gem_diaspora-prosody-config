@@ -27,7 +27,7 @@ module Prosody
   DIASPORACFG = "#{FileUtils.pwd}/config/prosody.cfg.lua".freeze
 
   def self.start
-    check_sanity && system("#{find_binary} --config #{WRAPPERCFG}")
+    check_sanity.nil? && system("#{find_binary} --config #{WRAPPERCFG}")
   end
 
   def self.update_configuration
