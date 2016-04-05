@@ -69,6 +69,9 @@ class Prosody
 
     config = File.read(DIASPORACFG)
     config_params.each do |k, v|
+      v = "MySQL" if v.include?("mysql2")
+      v = "PostgreSQL" if v.include?("postgresql")
+      v = "SQLite3" if v.include?("sqlite3")
       config.gsub!(/\#\{#{k}\}/, "#{v}")
     end
     File.open(WRAPPERCFG, 'w') {|f| f.write(config) }
