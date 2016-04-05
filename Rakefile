@@ -7,4 +7,4 @@ Rake::TestTask.new(:test) do |test|
   test.warning = false
 end
 
-task :default => [:test]
+task default: [:test]

@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/zauberstuhl/gem_diaspora-prosody-config'
 
   s.files       = `git ls-files`.split("\n")
-  s.require_paths = ["lib"]
+  s.require_paths = ['lib']
 
   s.add_development_dependency 'pronto'
   s.add_development_dependency 'pronto-rubocop'

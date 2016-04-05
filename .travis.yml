@@ -2,5 +2,5 @@ language: ruby
 rvm:
   - 2.1
 script:
-  - bundle exec pronto run -f text -c ${TRAVIS_BRANCH} --exit-code=true
+  - bundle exec pronto run -f text -c ${TRAVIS_BRANCH}
   - bundle exec rake
