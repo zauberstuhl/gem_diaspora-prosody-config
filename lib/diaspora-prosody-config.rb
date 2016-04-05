@@ -41,12 +41,10 @@ class Prosody
   end
 
   def init_config
-    # do some sanity checks
-    begin
-      require "bcrypt"
-    rescue LoadError
-      abort("bcrypt is required for diaspora authentication")
-    end
+    # check on bcrypt and warn
+    bcrypt_so = %x(find /usr/local/lib -name bcrypt.so) rescue ""
+    warn("bcrypt is required for diaspora authentication") if bcrypt_so.empty?
+    # check prosody version
     version = Gem::Version.new(0)
     about = %x(#{find_binary}ctl about)
     version_string = begin
