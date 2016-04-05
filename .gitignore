@@ -2,3 +2,4 @@
 *.log
 tmp
 etc/prosody.cfg.lua
+config/
