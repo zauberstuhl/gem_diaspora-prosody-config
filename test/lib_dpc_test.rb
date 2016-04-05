@@ -12,6 +12,6 @@ describe Prosody do
   end
 
   def test_dpc
-    assert_equal true, Prosody.new.start
+    assert_equal true, Prosody.start
   end
 end
