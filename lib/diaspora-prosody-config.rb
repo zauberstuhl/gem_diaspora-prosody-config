@@ -19,7 +19,6 @@
 require "fileutils"
 
 class Prosody
-  PROSODYBIN = find_binary
   GEMDIR = Gem::Specification.find_by_name('diaspora-prosody-config').gem_dir
   WRAPPERCFG = "#{GEMDIR}/etc/prosody.cfg.lua"
   DIASPORACFG = "#{FileUtils.pwd}/config/prosody.cfg.lua"
@@ -29,7 +28,7 @@ class Prosody
   end
 
   def start
-    system("#{PROSODYBIN} --config #{WRAPPERCFG}")
+    system("#{find_binary} --config #{WRAPPERCFG}")
   end
 
   private
@@ -49,8 +48,12 @@ class Prosody
       abort("bcrypt is required for diaspora authentication")
     end
     version = Gem::Version.new(0)
-    about = %x(#{PROSODYBIN}ctl about)
-    version_string = about.match(/prosody\s(\d+\.\d+\.\d+)/i).captures[0]
+    about = %x(#{find_binary}ctl about)
+    version_string = begin
+      about.match(/prosody\s(\d+\.\d+\.\d+)/i).captures[0]
+    rescue
+      abort("something went wrong with prosdoyctl")
+    end
     version = Gem::Version.new(version_string)
     abort("wasn't able to detect prosody installation") if version == Gem::Version.new(0)
     abort("your're prosody version should be >= 0.9.0") if version < Gem::Version.new("0.9.0")
