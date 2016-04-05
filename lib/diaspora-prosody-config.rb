@@ -30,7 +30,7 @@ module Prosody
     check_sanity.nil? && system("#{find_binary} --config #{WRAPPERCFG}")
   end
 
-  def self.update_configuration
+  def self.update_configuration(opts = {})
     # update prosody cfg in diaspora config dir
     gemcfg = "#{WRAPPERCFG}.tpl"
     unless File.exist?(DIASPORACFG)
@@ -38,20 +38,11 @@ module Prosody
     end
 
     config = File.read(DIASPORACFG)
-    config_params.each do |k, v|
-      begin
-        v = 'MySQL' if v.include?('mysql2')
-        v = 'PostgreSQL' if v.include?('postgresql')
-        v = 'SQLite3' if v.include?('sqlite3')
-      rescue
-        warn("Warning! #{k} is empty")
-      end
+    config_params(opts).each do |k, v|
       config.gsub!(/\#\{#{k}\}/, "#{v}")
     end
     File.open(WRAPPERCFG, 'w') {|f| f.write(config) }
   end
-
-  private
 
   def self.find_binary
     ENV['PATH'].split(':').each do |p|
@@ -76,28 +67,29 @@ module Prosody
     if version < Gem::Version.new('0.9.0')
       abort('your\'re prosody version should be >= 0.9.0')
     end
-    abort('wasn\'t able to detect the Diaspora environment') unless defined?(AppConfig)
-    abort('wasn\'t able to detect the Rails environment') unless defined?(Rails)
-
-    update_configuration
   end
 
-  def self.config_params
+  def self.config_params(opts)
     db = Rails.application.config.database_configuration[Rails.env]
     hostname = AppConfig.environment.url
       .gsub(/^http(s){0,1}:\/\/|\/$/, '')
       .to_s rescue 'localhost'
 
-    return {
-      plugin_path: "#{GEMDIR}/modules",
-      #log_info: AppConfig.chat.server.log.info.to_s,
-      #log_error: AppConfig.chat.server.log.error.to_s,
-      virtualhost_hostname: hostname,
-      virtualhost_driver: db['adapter'],
-      virtualhost_database: db['database'],
-      virtualhost_username: db['username'],
-      virtualhost_password: db['password'],
-      virtualhost_host: db['host']
-    }
+    opts[:virtualhost_ssl_key] = "#{opts[:certs]}/#{hostname}.key"
+    opts[:virtualhost_ssl_crt] = "#{opts[:certs]}/#{hostname}.crt"
+
+    opts[:plugin_path] = "#{GEMDIR}/modules"
+    opts[:virtualhost_hostname] =
+      hostname.gsub(/^http(s){0,1}:\/\/|\/$/, '').to_s rescue 'localhost'
+
+    opts[:virtualhost_driver] =
+      case opts[:virtualhost_driver]
+      when 'mysql2' then 'MySQL'
+      when 'postgresql' then 'PostgreSQL'
+      else 'SQLite3'
+      end
+    opts
   end
+
+  private_class_method :find_binary, :check_sanity, :config_params
 end
