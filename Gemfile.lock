@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    diaspora-prosody-config (0.0.3)
+    diaspora-prosody-config (0.0.4)
 
 GEM
   remote: https://rubygems.org/
