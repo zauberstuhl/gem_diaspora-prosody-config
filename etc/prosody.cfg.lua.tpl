@@ -59,7 +59,7 @@ modules_enabled = {
 		--"admin_telnet"; -- Opens telnet console interface on localhost port 5582
 
 	-- HTTP modules
-		--"bosh"; -- Enable BOSH clients, aka "Jabber over HTTP"
+		"bosh"; -- Enable BOSH clients, aka "Jabber over HTTP"
 		--"http_files"; -- Serve static files from a directory over HTTP
 
 	-- Other specific functionality
@@ -79,6 +79,15 @@ modules_disabled = {
 	-- "c2s"; -- Handle client connections
 	-- "s2s"; -- Handle server-to-server connections
 };
+
+-- BOSH ports configuration
+bosh_ports = {
+  {
+    port = #{bosh_port};
+    path = "#{bosh_path}";
+    interface = "#{bosh_interface}";
+  }
+}
 
 -- NOTE if you append new plugin_paths do not remove the variable #{plugin_path}
 -- or copy all modules from the gem directory gem_diaspora-prosody-config
@@ -144,8 +153,8 @@ authentication = "internal_plain"
 -- Logging configuration
 -- For advanced logging see http://prosody.im/doc/logging
 log = {
-	info = "log/prosody.log"; -- Change 'info' to 'debug' for verbose logging
-	error = "log/prosody.err";
+	#{log_debug} = "#{log_info}"; -- Change 'info' to 'debug' for verbose logging
+	error = "#{log_error}";
 	-- "*syslog"; -- Uncomment this for logging to syslog
 	-- "*console"; -- Log to the console, useful for debugging with daemonize=false
 }
@@ -165,8 +174,8 @@ VirtualHost "#{virtualhost_hostname}"
   }
 
   ssl = {
-    key = "certs/#{virtualhost_hostname}.key";
-    certificate = "certs/#{virtualhost_hostname}.crt";
+    key = "#{virtualhost_ssl_key}";
+    certificate = "#{virtualhost_ssl_crt}";
   }
 
   modules_enabled = {
