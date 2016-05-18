@@ -19,10 +19,8 @@
 require 'fileutils'
 
 module Prosody
-  GEMDIR = Gem::Specification.find_by_name(
-    'diaspora-prosody-config'
-  ).gem_dir.freeze
-
+  NAME = 'diaspora-prosody-config'.freeze
+  GEMDIR = Gem::Specification.find_by_name(NAME).gem_dir.freeze
   WRAPPERCFG = "#{GEMDIR}/etc/prosody.cfg.lua".freeze
   DIASPORACFG = "#{FileUtils.pwd}/config/prosody.cfg.lua".freeze
 
@@ -42,6 +40,8 @@ module Prosody
       config.gsub!(/\#\{#{k}\}/, "#{v}")
     end
     File.open(WRAPPERCFG, 'w') {|f| f.write(config) }
+    # check if prosody is available
+    check_sanity
   end
 
   def self.find_binary
@@ -49,23 +49,38 @@ module Prosody
       prosodybin = "#{p}/prosody"
       return prosodybin if File.exist?(prosodybin)
     end
-    abort('Prosody executable is missing please update your PATH variable')
+    abort <<-eos
+FATAL:
+*****************************************************************
+#{NAME} wasn't able to find your prosody binary.
+Have you installed prosody (http://prosody.im/download/start)?
+
+If you run Prosody or any other XMPP server by yourself you can
+disable #{NAME} by editing your diaspora.yml:
+configuration:
+  chat:
+    server:
+      enabled: false
+*****************************************************************
+    eos
   end
 
   def self.check_sanity
     # check on bcrypt and warn
     bcrypt_so = %x(find /usr/local/lib -name bcrypt.so) rescue ''
-    warn('bcrypt is required for diaspora authentication') if bcrypt_so.empty?
+    if bcrypt_so.empty?
+      warn("#{NAME}: bcrypt is required for diaspora authentication")
+    end
     # check prosody version
     about = %x(#{find_binary}ctl about)
     version_string = begin
       about.match(/prosody\s(\d+\.\d+\.\d+)/i).captures[0]
     rescue
-      abort('something went wrong with prosdoyctl')
+      abort "#{NAME}: Something went wrong with prosdoyctl"
     end
     version = Gem::Version.new(version_string)
     if version < Gem::Version.new('0.9.0')
-      abort('your\'re prosody version should be >= 0.9.0')
+      abort "#{NAME}: Your're prosody version should be >= 0.9.0"
     end
   end
 
