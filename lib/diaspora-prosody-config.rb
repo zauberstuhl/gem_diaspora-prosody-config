@@ -17,6 +17,7 @@
 #
 
 require 'fileutils'
+require 'digest/md5'
 
 module Prosody
   NAME = 'diaspora-prosody-config'.freeze
@@ -79,6 +80,24 @@ configuration:
   end
 
   def self.check_sanity
+    # check if configuration is matching
+    usrcfg = Digest::MD5.hexdigest(File.read(DIASPORACFG))
+    gemcfg = Digest::MD5.hexdigest(File.read("#{WRAPPERCFG}.tpl"))
+    unless usrcfg.eql?(gemcfg)
+      abort <<-eos
+FATAL:
+*****************************************************************
+
+#{usrcfg} != #{gemcfg}
+
+You modified #{DIASPORACFG}
+Please run:
+  rails runner config/initializers/prosody.rb
+
+Otherwise your configuration changes will not take effect!
+*****************************************************************
+      eos
+    end
     # check on bcrypt and warn
     bcrypt_so = %x(find /usr/local/lib -name bcrypt.so) rescue ''
     if bcrypt_so.empty?
