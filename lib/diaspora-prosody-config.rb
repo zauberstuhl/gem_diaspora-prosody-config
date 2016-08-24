@@ -72,11 +72,11 @@ configuration:
       warn("#{NAME}: bcrypt is required for diaspora authentication")
     end
     # check prosody version
-    about = %x(#{find_binary}ctl about)
+    about = %x(#{find_binary}ctl --config #{WRAPPERCFG} about)
     version_string = begin
       about.match(/prosody\s(\d+\.\d+\.\d+)/i).captures[0]
     rescue
-      abort "#{NAME}: Something went wrong with prosdoyctl"
+      abort "#{NAME}: #{about}"
     end
     version = Gem::Version.new(version_string)
     if version < Gem::Version.new('0.9.0')
