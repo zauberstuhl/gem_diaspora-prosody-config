@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'diaspora-prosody-config'
-  s.version     = '0.0.5'
+  s.version     = '0.0.6'
   s.summary     = 'Diaspora Configuration Wrapper For Prosodoy'
   s.description = 'This gem maps configuration options from Diaspora to Prosody.'
   s.license     = 'GPL-3.0'
