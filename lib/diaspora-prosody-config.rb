@@ -24,8 +24,21 @@ module Prosody
   WRAPPERCFG = "#{GEMDIR}/etc/prosody.cfg.lua".freeze
   DIASPORACFG = "#{FileUtils.pwd}/config/prosody.cfg.lua".freeze
 
+  # Catch signal interrupt
+  # for a clean shutdown
+  Signal.trap("TERM") {
+    shutdown
+    exit
+  }
+
   def self.start
-    check_sanity.nil? && system("#{find_binary} --config #{WRAPPERCFG}")
+    if check_sanity.nil?
+      @prosody_pid = Process.spawn("#{find_binary} --config #{WRAPPERCFG}")
+      # Prosody was forked into background
+      # Let's wait till the Wrapper
+      # will be killed or prosody itself
+      Process.waitpid(@prosody_pid)
+    end
   end
 
   def self.update_configuration(opts = {})
@@ -106,5 +119,11 @@ configuration:
     opts
   end
 
-  private_class_method :find_binary, :check_sanity, :config_params
+  def self.shutdown
+    unless @prosody_pid.nil?
+      Process.kill(9, @prosody_pid)
+    end
+  end
+
+  private_class_method :find_binary, :check_sanity, :config_params, :shutdown
 end
