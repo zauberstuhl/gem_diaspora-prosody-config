@@ -12,6 +12,7 @@ describe Prosody do
   end
 
   def test_dpc
-    assert_equal true, Prosody.start
+    pid = Prosody.start
+    assert pid > 0, msg = "Prosody wasn't forked correctly"
   end
 end
