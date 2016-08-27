@@ -92,7 +92,7 @@ FATAL:
 
 You modified #{DIASPORACFG}
 Please run:
-  rails runner config/initializers/prosody.rb
+  cp config/prosody.cfg.lua $(bundle show diaspora-prosody-config)/etc/prosody.cfg.lua.tpl
 
 Otherwise your configuration changes will not take effect!
 *****************************************************************
